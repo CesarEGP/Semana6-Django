@@ -27,3 +27,4 @@ DATABASES = {
 
 python manage.py migrate    >   ejecuta todas las migraciones faltantes
 python manage.py sqlmigrate nombre_app num_migration  >  mostrar el codigo sql de la migracion especifica
+python manage.py startapp NOSMBRE_APP   >  crea una nueva aplicacion en nuestro proyecto
