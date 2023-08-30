@@ -1,0 +1,29 @@
+django-admin startproject nombre_proyecto [ubicacion] > crea un nuevo projecto en django
+python manage.py runserver  >  levanta el server de django en desarrollo
+python manage.py showmigrations  >  muestra las migraciones que hay en mi proyecto y las que se ejecutaron con [x]
+
+--Cuando ya se configure la base de datos se debe de instalar psycopg2 > pip install psycopg2
+--Para manejar los entorno virtuales esta la libreria doteng  >  pip install python-dotenv
+luego de instalar dotenv se tiene que importa en el archivo settings lo siguiente
+from dotenv import load_dotenv
+from os import environ
+
+load_dotenv()
+
+configuracion de la base de datos en el archivo settings.py
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',  > el ultimo valor se cambia a postgresql
+        'NAME':  'dulceria',   > nombre de la base de datos 
+        'PASSWORD': 'Abc123',   >   password 
+        'PORT': 5432,       > el puerto que se va a usar
+        'HOST': 'localhost',     > el host
+        'USER': 'postgres',     >  aveces pide el user, agregarlo por seguridad
+    }
+}
+--Se debe crear un archivo .env para agregar las creedenciales y temas de seguridad
+--y otro archivo env.example para dar a conocer mis variables sin afectar datos sencibles
+
+
+python manage.py migrate    >   ejecuta todas las migraciones faltantes
+python manage.py sqlmigrate nombre_app num_migration  >  mostrar el codigo sql de la migracion especifica
