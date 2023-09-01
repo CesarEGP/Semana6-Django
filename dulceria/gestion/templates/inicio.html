@@ -8,5 +8,11 @@
 </head>
 <body>
     <p>Hola desde mi proyecto de dulceriapp</p>
+    <h1>{{ data.usuario.nombre }} {{ data.usuario.apellido }}</h1>
+    <ul>
+            {% for hobbie in data.hobbies %}
+            <p>{{hobbie}}</p>
+            {% endfor %}
+    </ul>
 </body>
 </html>

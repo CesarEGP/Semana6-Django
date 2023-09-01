@@ -7,5 +7,18 @@ from django.shortcuts import render
 
 def paginaInicio(request):
     print(request)
-    # return recibe parametro como la solicitud, nombre de la plantilla
-    return render(request, 'inicio.html')
+    data={
+        'usuario':{
+            'nombre':'Cesar',
+            'apellido':'Garcia Pizarro'
+        },
+        'hobbies':[
+            {
+                'description': 'Ir al cine'
+            },
+            {
+                'description': 'Ir a la piscina'
+            }
+        ]
+    }
+    return render(request, 'inicio.html', {'data': data})
