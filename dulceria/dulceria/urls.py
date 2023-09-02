@@ -19,5 +19,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('gestion.urls'))    
+    path('api/', include('gestion.urls')) 
+    #se agrega el archivo de la app, >   
 ]

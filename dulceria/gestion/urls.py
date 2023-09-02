@@ -3,9 +3,12 @@ from django.urls import path
 # cuando colocamos el punto, indicamos que se trata de un archivo en el mismo nivel
 # y sino colo camos el punto estaremos indicando el mismo que sera o una liberia o un archivo
 # externo
-from .views import paginaInicio
+from .views import paginaInicio, devolverHoraServidor, CategoriasController
 
-urlpatterns = {
+
+urlpatterns = [
     # (separa la ruta, vista que va a utilizar)
-    path('inicio', paginaInicio)
-}
+    path('inicio', paginaInicio),
+    path('status', devolverHoraServidor),
+    path('categorias', CategoriasController.as_view())  # as_view() se tranforma a una vista
+]
