@@ -127,4 +127,14 @@ class CategoriaController(APIView):
         
 
     def delete(self, request: request, id: str):
-        pass
+        categoriaEncontrada = CategoriaModel.objects.filter(id=id).first()
+        if not categoriaEncontrada:
+            return Response(data={
+                'message': 'Categoria no encontrada'
+            }, status= status.HTTP_404_NOT_FOUND)
+        
+        CategoriaModel.objects.filter(id=id).delete()
+
+        return Response(data={
+            'message': 'Categoria eliminada exitosamente'
+        })
