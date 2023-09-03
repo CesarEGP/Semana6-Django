@@ -4,9 +4,11 @@ from rest_framework.response import Response
 from datetime import datetime
 from rest_framework import request
 from rest_framework.views import APIView
-from .models import CategoriaModel
+from .models import CategoriaModel, GolosinaModel
 
-from .serializers import CategoriaSerializer
+
+#import serializers
+from .serializers import CategoriaSerializer, GolosinaSerializer
 
 # ayuda a designar los estados 
 from rest_framework import status
@@ -125,8 +127,8 @@ class CategoriaController(APIView):
                 'content':serializador.errors
             }, status=status.HTTP_400_BAD_REQUEST)
         
-
     def delete(self, request: request, id: str):
+
         categoriaEncontrada = CategoriaModel.objects.filter(id=id).first()
         if not categoriaEncontrada:
             return Response(data={
@@ -138,3 +140,66 @@ class CategoriaController(APIView):
         return Response(data={
             'message': 'Categoria eliminada exitosamente'
         })
+    
+class GolosinasController(APIView):
+    def get(self, request: request):        
+        print(request.query_params)
+        # paginacion
+
+        #Operador ternario
+        #       sucede si es verdadero                  --condicional                                                                              
+        # page = request.query_params.get('page') if request.query_params.get('page') is not None else 1
+        #forma mas simple que ternarios
+        #       si existe page guarda, sino devuelve 1
+        page = int(request.query_params.get('page',1))  # esto devuelve un string y lo convertimos a int
+        # por pagina quiero solo 5
+        perPage = int(request.query_params.get('perPage',5)) 
+
+        # para ordenamiento asc y desc, se convierte en string
+        ordering = request.query_params.get('ordering')
+        orderingType = request.query_params.get('orderingType')  #asc o desc
+        orderingType = '' if orderingType == 'asc' else '-'
+
+
+        # cuantos elementos me voy a saltar(offset) 
+        skip = (page - 1) * perPage
+        # cuantos elementos voy a tomar(limit)
+        take = perPage * page
+
+        consulta = GolosinaModel.objects
+        #si existe ordering entonces ..
+        if ordering:
+            golosinas = GolosinaModel.objects.order_by(ordering).all()[
+                skip:take]
+        else:
+            golosinas = GolosinaModel.objects.all()[skip:take]
+
+        totalGolosinas = GolosinaModel.objects.count()
+        # para manejar la base de datos 
+        golosinas = consulta.all()[skip:take]  # [:3] para que solo muestre las 3 primeras registros
+        # se llama al serializer
+        serializador = GolosinaSerializer(instance=golosinas, many= True) # many  > itera el arreglo 
+
+        pagination = helperPagination(totalGolosinas,page,perPage)
+        return Response(data={
+            'content': serializador.data,
+            'pagination': pagination
+        })
+
+from math import ceil
+
+def helperPagination(total: int, page: int, perPage:int):
+    itemsPerPage = perPage if total >= perPage else total
+    #calcular cuantas paginas deberiamos tener
+    #se usa ceil para redondear al int mas cercano
+    totalPages = ceil(total / itemsPerPage) if itemsPerPage > 0 else None
+    #calcular cua          pagina actia es > 1 y pagina menor al total de paginas                                        
+    prevPage = page - 1 if page > 1 and page <= totalPages else None
+    #comprueba si hay una pagina siguiente
+    nextPage = page + 1 if totalPages > 1 and page < totalPages else None
+    return{
+        'itemsPerPage': itemsPerPage,
+        'totalPages': totalPages,
+        'prevPage': prevPage,
+        'nextPage': nextPage
+    }

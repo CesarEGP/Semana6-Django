@@ -1,6 +1,6 @@
 # los serializers son como los dto 
 from rest_framework import serializers
-from .models import CategoriaModel
+from .models import CategoriaModel, GolosinaModel
 
 class CategoriaSerializer(serializers.ModelSerializer):
     # siver para basarme en un modelo que haga todas las validadciones correspondientes
@@ -13,3 +13,9 @@ class CategoriaSerializer(serializers.ModelSerializer):
         # exclude = ['id']
         # NOTA : O se usa el atrib field o exclude pero no se usan al mismo 
         # tiempo
+
+class GolosinaSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = GolosinaModel
+        fields = '__all__'
