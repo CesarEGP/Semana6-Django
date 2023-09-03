@@ -27,4 +27,7 @@ DATABASES = {
 
 python manage.py migrate    >   ejecuta todas las migraciones faltantes
 python manage.py sqlmigrate nombre_app num_migration  >  mostrar el codigo sql de la migracion especifica
+--Por defecto django no tiene un entorno para trabajar, solo contiene configuraiones por defecto
+--es por ello que se debe crear ese entorno de trabajo
 python manage.py startapp NOSMBRE_APP   >  crea una nueva aplicacion en nuestro proyecto
+python manage.py makemigrations NOMBRE_APP --name NOMBRE_MIGRACION     >   crea una nueva migracion
