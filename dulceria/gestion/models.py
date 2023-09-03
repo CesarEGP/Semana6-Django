@@ -22,7 +22,7 @@ class CategoriaModel(models.Model):
     #editable > su valor no se puede cambiar una vez creado
     #null > si es false significa que no puede ser null
     nombre = models.TextField(null=False)
-    nivelAzucar = models.TextField(name='nivel_azucar', null=False, 
+    nivelAzucar = models.TextField(db_column='nivel_azucar', null=False, 
         choices=opcionesNivelAzucar)
     
 
@@ -39,7 +39,7 @@ class GolosinaModel(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     nombre = models.TextField(null=False)
-    fechaVencimiento = models.DateField(editable=False, null=False, name='fecha_vencimiento')
+    fechaVencimiento = models.DateField(editable=False, null=False, db_column='fecha_vencimiento')
     precio = models.FloatField(null=False)
     procedencia = models.TextField(choices=opcionProcedencia, default='NACIONAL')
 
@@ -63,4 +63,4 @@ class GolosinaModel(models.Model):
         # unicidad entre dos o mas columnas
         # jamas se podra repetir en un registro el nombre y la fecha de venc
         # constraint - restriccion
-        unique_together = [['nombre', 'fecha_vencimiento']]
+        unique_together = [['nombre', 'fechaVencimiento']]

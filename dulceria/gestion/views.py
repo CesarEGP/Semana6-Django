@@ -6,6 +6,11 @@ from rest_framework import request
 from rest_framework.views import APIView
 from .models import CategoriaModel
 
+from .serializers import CategoriaSerializer
+
+# ayuda a designar los estados 
+from rest_framework import status
+
 # acá se crean los controladores
 
 
@@ -57,5 +62,22 @@ class CategoriasController(APIView):
         })
     
     def post(self, request: request):
-        # a qui se guarda la info proveniente del cleinte
+        # a qui se guarda la info proveniente del cliente
         data = request.data
+
+        # data > validar la informacion entrante y ver que cumpla los parametro necsarios
+        serializador = CategoriaSerializer(data = data)
+
+        validacion = serializador.is_valid()
+
+        if validacion == True:
+            nuevacategoria = serializador.save()
+            print(nuevacategoria)
+            return Response(data={
+                'message':'Categoria creada exitosamente'
+            }, status=status.HTTP_201_CREATED)
+        else:
+            return Response(data={
+                'message':'Error al crear la categoria',
+                'content': serializador.errors # me da un listado con lo errores
+            }, status=status.HTTP_400_BAD_REQUEST)
