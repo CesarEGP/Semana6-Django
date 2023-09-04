@@ -7,7 +7,8 @@ from .views import (paginaInicio,
                     devolverHoraServidor, 
                     CategoriasController, 
                     CategoriaController,
-                    GolosinasController)
+                    GolosinasController,
+                    GolosinaController)
 
 
 urlpatterns = [
@@ -16,5 +17,6 @@ urlpatterns = [
     path('status', devolverHoraServidor),
     path('categorias', CategoriasController.as_view()),  # as_view() se tranforma a una vista
     path('categoria/<id>', CategoriaController.as_view()),
-    path('golosinas', GolosinasController.as_view())
+    path('golosinas', GolosinasController.as_view()),
+    path('golosina/<id>', GolosinaController.as_view())
 ]

@@ -8,7 +8,10 @@ from .models import CategoriaModel, GolosinaModel
 
 
 #import serializers
-from .serializers import CategoriaSerializer, GolosinaSerializer
+from .serializers import (CategoriaSerializer, 
+                        GolosinaSerializer, 
+                        GolosinaResponseSerializer,
+                        CategoriaResponseSerializer)
 
 # ayuda a designar los estados 
 from rest_framework import status
@@ -95,8 +98,8 @@ class CategoriaController(APIView):
             return Response(data={
                 'message': 'Categoria no encontrada'
             }, status= status.HTTP_404_NOT_FOUND)
-        
-        serializador = CategoriaSerializer(instance=categoriaEncontrada)
+        # print(categoriaEncontrada.golosinas.all())
+        serializador = CategoriaResponseSerializer(instance=categoriaEncontrada)
         return Response(data={
             'content': serializador.data
         })
@@ -158,7 +161,8 @@ class GolosinasController(APIView):
         # para ordenamiento asc y desc, se convierte en string
         ordering = request.query_params.get('ordering')
         orderingType = request.query_params.get('orderingType')  #asc o desc
-        orderingType = '' if orderingType == 'asc' else '-'
+        
+        orderingType = '-' if orderingType == 'desc' else ''
 
 
         # cuantos elementos me voy a saltar(offset) 
@@ -169,14 +173,13 @@ class GolosinasController(APIView):
         consulta = GolosinaModel.objects
         #si existe ordering entonces ..
         if ordering:
-            golosinas = GolosinaModel.objects.order_by(ordering).all()[
+            golosinas = GolosinaModel.objects.order_by(orderingType + ordering).all()[
                 skip:take]
         else:
             golosinas = GolosinaModel.objects.all()[skip:take]
 
         totalGolosinas = GolosinaModel.objects.count()
-        # para manejar la base de datos 
-        golosinas = consulta.all()[skip:take]  # [:3] para que solo muestre las 3 primeras registros
+        # para manejar la base de datos         
         # se llama al serializer
         serializador = GolosinaSerializer(instance=golosinas, many= True) # many  > itera el arreglo 
 
@@ -184,6 +187,22 @@ class GolosinasController(APIView):
         return Response(data={
             'content': serializador.data,
             'pagination': pagination
+        })
+    
+    def post(self, request):
+        #Implementar la creacion de una nueva golosina
+        pass
+
+class GolosinaController(APIView):
+    def get(self, request:request,id:str):
+        golosinaEncontrada = GolosinaModel.objects.filter(id=id).first()
+        if golosinaEncontrada is None:
+            return Response(data={
+                'message': 'La golosina no existe'
+            }, status=status.HTTP_404_NOT_FOUND_)
+        serializador = GolosinaResponseSerializer(instance=golosinaEncontrada)
+        return Response(data={
+            'content': serializador.data
         })
 
 from math import ceil
