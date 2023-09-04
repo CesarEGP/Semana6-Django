@@ -190,8 +190,10 @@ class GolosinasController(APIView):
         })
     
     def post(self, request):
-        #Implementar la creacion de una nueva golosina
+        
         pass
+
+    
 
 class GolosinaController(APIView):
     def get(self, request:request,id:str):
